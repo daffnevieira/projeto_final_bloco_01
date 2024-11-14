@@ -1,16 +1,30 @@
 package ecommerce;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import ecommerce.model.Livros;
 import ecommerce.util.Cores;
 
 public class Menu {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		
+
 		int opcao;
-		
+
+		// Criando alguns livros para adicionar à biblioteca
+		Livros livro1 = new Livros("O Senhor dos Anéis", 25.50, "Fantasia");
+		Livros livro2 = new Livros("1984", 51.5, "Romance");
+		Livros livro3 = new Livros("A Revolução dos Bichos", 42.55, "Fábula");
+
+		ArrayList<Livros> biblioteca = new ArrayList<>();
+		ArrayList<Livros> carrinho = new ArrayList<>();
+
+		biblioteca.add(livro1);
+		biblioteca.add(livro2);
+		biblioteca.add(livro3);
+
 		while (true) {
 			System.out.println(Cores.TEXT_WHITE_BOLD + Cores.ANSI_RED_BACKGROUND);
 			System.out.println("*****************************************************");
@@ -20,80 +34,135 @@ public class Menu {
 			System.out.println("                   - Neil Gaiman                     ");
 			System.out.println("*****************************************************");
 			System.out.println("                                                     ");
-			System.out.println("            1 - Criar Conta                          ");
-			System.out.println("            2 - Listar Livros Disponíveis            ");
-			System.out.println("            3 - Buscar Livro por ID                  ");
-			System.out.println("            4 - Adicionar Livro ao Carrinho          ");
-			System.out.println("            5 - Ver Carrinho                         ");
+			System.out.println("            1 - Listar Livros Disponíveis            ");
+			System.out.println("            2 - Buscar Livro por ID                  ");
+			System.out.println("            3 - Adicionar Livro ao Carrinho          ");
+			System.out.println("            4 - Ver Carrinho                         ");
+			System.out.println("            5 - Apagar do Carrinho                   ");
 			System.out.println("            6 - Finalizar Compra                     ");
-			System.out.println("            7 - Listar Pedidos                       ");
-			System.out.println("            8 - Atualizar Informações da Conta       ");
-			System.out.println("            9 - Sair                                 ");
-			System.out.println("                                                     ");
+			System.out.println("            7 - Adicionar Novo Livro à Biblioteca    ");
+			System.out.println("            8 - Sair                                 ");
 			System.out.println("*****************************************************");
-			System.out.println("Entre com a opção desejada:                          ");
-			System.out.println("                                                     ");
-
+			System.out.print("Entre com a opção desejada:                          ");
 
 			opcao = sc.nextInt();
+			sc.nextLine();
 
-			if (opcao == 9) {
+			if (opcao == 8) {
 				System.out.println("\nBanco do Brazil com Z - O seu Futuro começa aqui!");
 				sobre();
-                sc.close();
+				sc.close();
 				System.exit(0);
 			}
+
 			switch (opcao) {
-		    case 1:
-		        System.out.println("Criar Conta\n\n");
-		        // Código para criar conta de usuário
-		        break;
-		    case 2:
-		        System.out.println("Listar Livros Disponíveis\n\n");
-		        // Código para listar todos os livros disponíveis para compra
-		        break;
-		    case 3:
-		        System.out.println("Consultar Livro por ID\n\n");
-		        // Código para consultar os detalhes de um livro específico pelo ID
-		        break;
-		    case 4:
-		        System.out.println("Adicionar Livro ao Carrinho\n\n");
-		        // Código para adicionar um livro ao carrinho de compras
-		        break;
-		    case 5:
-		        System.out.println("Ver Carrinho\n\n");
-		        // Código para exibir os livros no carrinho de compras do usuário
-		        break;
-		    case 6:
-		        System.out.println("Finalizar Compra\n\n");
-		        // Código para finalizar a compra e processar o pedido
-		        break;
-		    case 7:
-		        System.out.println("Listar Pedidos\n\n");
-		        // Código para listar todos os pedidos do usuário
-		        break;
-		    case 8:
-		        System.out.println("Atualizar Informações da Conta\n\n");
-		        // Código para atualizar as informações da conta do usuário
-		        break;
-		    case 9:
-		        System.out.println("Saindo do Sistema\n\n");
-		        // Código para encerrar o sistema
-		        break;
-		    default:
-		        System.out.println("\nOpção Inválida!\n");
-		        break;
+			case 1:
+				System.out.println("Listar Livros Disponíveis\n");
+				if (biblioteca.isEmpty()) {
+					System.out.println("Nenhum livro disponível.");
+				} else {
+					for (Livros livro : biblioteca) {
+						livro.exibirDetalhes();
+						System.out.println("----------------------------");
+					}
+				}
+				break;
+			case 2:
+				System.out.println("Buscar Livro por ID\n");
+				System.out.print("Digite o ID do livro: ");
+				int id = sc.nextInt();
+				if (id >= 0 && id < biblioteca.size()) {
+					biblioteca.get(id).exibirDetalhes();
+				} else {
+					System.out.println("ID inválido!");
+				}
+				break;
+			case 3:
+				System.out.println("Adicionar ao Carrinho\n");
+				System.out.print("Digite o ID do livro que deseja adicionar ao carrinho: ");
+				int livroId = sc.nextInt();
+				if (livroId >= 0 && livroId < biblioteca.size()) {
+					carrinho.add(biblioteca.get(livroId));
+					System.out.println("Livro adicionado ao carrinho!");
+				} else {
+					System.out.println("ID inválido!");
+				}
+				break;
+			case 4:
+				System.out.println("Ver Carrinho\n");
+				if (carrinho.isEmpty()) {
+					System.out.println("Carrinho vazio!");
+				} else {
+					for (Livros livro : carrinho) {
+						livro.exibirDetalhes();
+						System.out.println("----------------------------");
+					}
+				}
+				break;
+			case 5:
+				System.out.println("Apagar do Carrinho\n");
+				if (carrinho.isEmpty()) {
+					System.out.println("Carrinho vazio!");
+				} else {
+					System.out.println("Livros no Carrinho:");
+					for (int i = 0; i < carrinho.size(); i++) {
+						System.out.println(i + " - " + carrinho.get(i).getNome());
+					}
+					System.out.print("Digite o índice do livro que deseja remover: ");
+					int indexRemover = sc.nextInt();
+					if (indexRemover >= 0 && indexRemover < carrinho.size()) {
+						carrinho.remove(indexRemover);
+						System.out.println("Livro removido do carrinho.");
+					} else {
+						System.out.println("Índice inválido!");
+					}
+				}
+				break;
+			case 6:
+				System.out.println("Finalizar Compra\n");
+				if (carrinho.isEmpty()) {
+					System.out.println("Carrinho vazio! Não é possível finalizar a compra.");
+				} else {
+					double total = 0;
+					for (Livros livro : carrinho) {
+						total += livro.getPreco();
+					}
+					System.out.println("Total da compra: R$ " + total);
+					System.out.println("Compra finalizada com sucesso!");
+					carrinho.clear();
+				}
+				break;
+			case 7:
+				System.out.println("Adicionar Novo Livro à Biblioteca\n");
+				
+				System.out.print("Digite o nome do livro: ");
+				String nome = sc.nextLine();
+				
+				System.out.print("Digite o preço do livro: ");
+				double preco = sc.nextDouble();
+				sc.nextLine(); 
+				
+				System.out.print("Digite a descrição do livro: ");
+				String descricao = sc.nextLine();
+				
+				Livros novoLivro = new Livros(nome, preco, descricao);
+				biblioteca.add(novoLivro);
+				
+				System.out.println("Novo livro adicionado à biblioteca.");
+				break;
+				
+			default:
+				System.out.println("\nOpção Inválida!\n");
+				break;
+			}
 		}
-
-		}
-
 	}
+
 	public static void sobre() {
 		System.out.println("\n*********************************************************");
-		System.out.println("Projeto Desenvolvido por: ");
+		System.out.println("Projeto Desenvolvido por:");
 		System.out.println("Daffne Vieira Rodrigues");
-		System.out.println("github.com/conteudoGeneration");
+		System.out.println("https://github.com/daffnevieira/projeto_final_bloco_01/");
 		System.out.println("*********************************************************");
 	}
-
 }
