@@ -16,60 +16,65 @@ public class CarrinhoController implements LivrosRepository {
 
     @Override
     public void salvar(Livros livro) {
-        carrinho.add(livro);
-        System.out.println("Livro adicionado ao carrinho: " + livro.getNome());
+        try {
+            carrinho.add(livro);
+            System.out.println("Livro adicionado ao carrinho: " + livro.getNome());
+        } catch (Exception e) {
+            System.out.println("Erro ao adicionar livro ao carrinho: " + e.getMessage());
+        }
     }
 
     @Override
     public void atualizar(Livros livro) {
-        for (int i = 0; i < carrinho.size(); i++) {
-            if (carrinho.get(i).getNome().equals(livro.getNome())) {
-                carrinho.set(i, livro);
-                System.out.println("Livro atualizado: " + livro.getNome());
-                return;
+        try {
+            for (int i = 0; i < carrinho.size(); i++) {
+                if (carrinho.get(i).getNome().equals(livro.getNome())) {
+                    carrinho.set(i, livro);
+                    System.out.println("Livro atualizado: " + livro.getNome());
+                    return;
+                }
             }
+            System.out.println("Livro não encontrado no carrinho para atualização.");
+        } catch (Exception e) {
+            System.out.println("Erro ao atualizar livro no carrinho: " + e.getMessage());
         }
-        System.out.println("Livro não encontrado no carrinho para atualização.");
     }
 
     @Override
     public void deletar(int id) {
-        if (id >= 0 && id < carrinho.size()) {
-            Livros livroRemovido = carrinho.remove(id);
-            System.out.println("Livro removido do carrinho: " + livroRemovido.getNome());
-        } else {
-            System.out.println("ID inválido. Livro não encontrado no carrinho.");
+        try {
+            if (id >= 0 && id < carrinho.size()) {
+                Livros livroRemovido = carrinho.remove(id);
+                System.out.println("Livro removido do carrinho: " + livroRemovido.getNome());
+            } else {
+                System.out.println("ID inválido. Livro não encontrado no carrinho.");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao remover livro do carrinho: " + e.getMessage());
         }
     }
 
     @Override
     public Livros buscarPorId(int id) {
-        if (id >= 0 && id < carrinho.size()) {
-            return carrinho.get(id);
-        }
-        System.out.println("Livro não encontrado com o ID fornecido.");
-        return null;
-    }
-
-    @Override
-    public List<Livros> buscarTodos() {
-        return carrinho;
-    }
-
-    // Métodos adicionais
-    public void listarCarrinho() {
-        if (carrinho.isEmpty()) {
-            System.out.println("Carrinho vazio!");
-        } else {
-            System.out.println("Livros no Carrinho:");
-            for (Livros livro : carrinho) {
-                livro.exibirDetalhes();
+        try {
+            if (id >= 0 && id < carrinho.size()) {
+                return carrinho.get(id);
+            } else {
+                System.out.println("ID inválido. Livro não encontrado.");
+                return null;
             }
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar livro no carrinho: " + e.getMessage());
+            return null;
         }
     }
 
-    public void limparCarrinho() {
-        carrinho.clear();
-        System.out.println("Carrinho limpo.");
+    public List<Livros> listarTodos() {
+        return new ArrayList<>(carrinho);
     }
+
+	@Override
+	public List<Livros> buscarTodos() {
+		return new ArrayList<>(carrinho);
+	}
 }
